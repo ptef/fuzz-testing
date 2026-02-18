@@ -1,15 +1,19 @@
 import os
 import sys
 
+import pci_lib
+
 INC = int('0x04', 16)
-# REG_OFF = hex(int('0x00', 16))
 file_name = ''
 
-# Determining Device ID based on command line input with a default DEVICE_ID of 04:00.0
-if (len(sys.argv)) != 2:
-    DEVICE_ID = '01:00.0'
-else:
-    DEVICE_ID = str(sys.argv[1])
+# Determining Device ID based on command line input with a default from pci_lib
+DEVICE_ID = pci_lib.DEVICE_BDF
+for arg in sys.argv[1:]:
+    if arg[0:3].lower() == '-d=':
+        DEVICE_ID = arg[3:]
+    else:
+        # Support bare positional argument for backwards compatibility
+        DEVICE_ID = arg
 
 def main():
     # REG_OFF = hex(int('0x00', 16))

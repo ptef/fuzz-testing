@@ -1,17 +1,14 @@
 import os
-from sre_constants import REPEAT_ONE
 import sys
 import random
-from random import randrange
 import time
-import subprocess
-import re
+import datetime
+
+import pci_lib
 
 # initializing register incriment for serial writes and output file name
 INC = int('0x01', 16)
 file_name = 'pci_write'
-
-import datetime
 
 now = datetime.datetime.now()
 formatted_date_time = now.strftime("%Y-%m-%d_%H-%M-%S")
@@ -75,6 +72,16 @@ def settings():
 
     # global save argument values
     global args
+
+    # Set defaults for all globals -- default BDF from pci_lib
+    DEVICE_ID = pci_lib.DEVICE_BDF
+    basic = 64
+    full = 0
+    extended = 0
+    new = 0
+    cont = 0
+    serial = 1
+    rand = 0
 
     args = listToString(sys.argv)
     sys.argv.pop(0)
@@ -237,7 +244,7 @@ def config(output, addr):
             REG = hex(REG)
             #print(str(REG))
             RAND = os.popen('openssl rand -hex 1').read()
-            if REG in dict.keys():
+            if REG in combinations.keys():
                 while RAND in combinations[REG]:
                     RAND = os.popen('openssl rand -hex 1').read()
             value = os.popen('sudo setpci -vD -s ' + DEVICE_ID + ' ' + str(REG) + '.B=' + str(RAND)).read()
@@ -324,9 +331,7 @@ def skip_reg():
             addr_list.append(addr)
         else:
             print('break')
-            # f i > 0:
             break
-            continue
     return addr_list
 
 

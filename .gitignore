@@ -1,0 +1,14 @@
+# Log files
+*.log
+pci_write_*
+pci_read
+
+# Packages
+*.deb
+
+# Python
+__pycache__/
+*.pyc
+
+# Bisect state files
+bisect_state_*.json
